@@ -1,0 +1,653 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>$PIXL | Community-Built Artwork | Pixl the Builder</title>
+    <!-- Google Fonts & simple CSS reset -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0c12, #030507);
+            font-family: 'Inter', sans-serif;
+            color: #eef5ff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+        }
+
+        /* main container */
+        .pixel-container {
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* header / hero */
+        .hero {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0, 255, 170, 0.15);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0, 255, 170, 0.3);
+            border-radius: 100px;
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #0fa;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFF8E7, #A5F0D0, #6EE7B7);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* main grid: art left, stats right */
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 2rem 0 2.5rem;
+        }
+
+        .artwork-area {
+            flex: 2;
+            min-width: 280px;
+            background: rgba(5, 10, 20, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 1.8rem;
+            border: 1px solid rgba(72, 255, 200, 0.2);
+            box-shadow: 0 25px 40px -15px rgba(0,0,0,0.5);
+            transition: all 0.2s;
+        }
+
+        .canvas-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #010101;
+            border-radius: 32px;
+            padding: 1.5rem;
+            box-shadow: inset 0 0 15px rgba(0,255,170,0.1), 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        canvas {
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: pixelated;
+            background: #0a0e15;
+            border-radius: 24px;
+            width: 100%;
+            height: auto;
+            max-width: 480px;
+            box-shadow: 0 0 0 2px rgba(0,255,200,0.2), 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        .milestone-badge {
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            background: #1e2a2f80;
+            border-radius: 60px;
+            padding: 0.4rem 1rem;
+            display: inline-block;
+            width: auto;
+            backdrop-filter: blur(4px);
+            font-size: 0.8rem;
+        }
+
+        .stats-area {
+            flex: 1.2;
+            min-width: 260px;
+            background: rgba(12, 18, 28, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 1.8rem;
+            border: 1px solid rgba(0, 255, 200, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: #0f131f60;
+            border-radius: 28px;
+            padding: 1.2rem;
+            border-left: 4px solid #3effbc;
+        }
+
+        .holders-number {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            background: linear-gradient(145deg, #fff, #90ffd0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            line-height: 1;
+        }
+
+        .progress-section {
+            margin: 0.5rem 0 0.2rem;
+        }
+        .progress-bar-bg {
+            background: #1e2a36;
+            border-radius: 60px;
+            height: 14px;
+            overflow: hidden;
+            margin: 10px 0 8px;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #34e0a2, #a0f5d0);
+            border-radius: 60px;
+            transition: width 0.5s ease;
+        }
+        .next-milestone-text {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #bdf2e0;
+        }
+
+        .tagline-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin-top: 1rem;
+        }
+        .tag {
+            background: #1e2a2f;
+            border-radius: 60px;
+            padding: 0.4rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #bbf0dc;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            border-top: 1px dashed #2c3a42;
+            padding-top: 2rem;
+            opacity: 0.7;
+        }
+
+        .status-badge {
+            background: #0f2120;
+            border-radius: 30px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: #1effbc;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 6px #2effbc;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.4; transform: scale(0.8);} 100% { opacity: 1; transform: scale(1.2);} }
+
+        button {
+            background: none;
+            border: none;
+            color: white;
+        }
+
+        @media (max-width: 780px) {
+            h1 { font-size: 2.3rem; }
+            .dashboard { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="pixel-container">
+    <div class="hero">
+        <div class="badge">⚡ CHAIN REACTION ART ⚡</div>
+        <h1>🧱 PIXL THE BUILDER</h1>
+        <div class="tagline">The Internet’s First Community-Built Artwork<br>Every holder adds another pixel. Every milestone upgrades the canvas.</div>
+    </div>
+
+    <div class="dashboard">
+        <!-- PIXEL ART CANVAS -->
+        <div class="artwork-area">
+            <div class="canvas-wrapper">
+                <canvas id="pixelCanvas" width="512" height="512" style="width:100%; height:auto; max-width:512px; aspect-ratio:1/1"></canvas>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                <div class="milestone-badge">🎨 EVOLUTION STAGE: <span id="evolutionStage">Genesis Pixel</span></div>
+                <div class="status-badge"><span class="pulse"></span> <span id="liveStatus">Live from Helius</span></div>
+            </div>
+        </div>
+
+        <!-- HOLDER STATS & PROGRESS -->
+        <div class="stats-area">
+            <div class="stat-card">
+                <div style="font-size: 0.8rem; font-weight: 500; letter-spacing: 2px;">🏆 CURRENT HOLDERS</div>
+                <div class="holders-number" id="holderCountDisplay">—</div>
+                <div class="progress-section">
+                    <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+                    <div class="next-milestone-text" id="nextMilestoneInfo">Loading holder data...</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div style="font-weight: 700; margin-bottom: 12px;">📈 EVOLUTION MILESTONES</div>
+                <div style="font-size: 0.75rem; line-height: 1.5; display: grid; gap: 6px;">
+                    <div>▪ 10 ➜ First pixel appears</div>
+                    <div>▪ 50 ➜ Basic outline revealed</div>
+                    <div>▪ 100 ➜ Colors unlock</div>
+                    <div>▪ 250 ➜ Character revealed</div>
+                    <div>▪ 500 ➜ Detailed pixel art appears</div>
+                    <div>▪ 1,000 ➜ Animated elements unlock</div>
+                    <div>▪ 1,500 ➜ Hidden easter eggs</div>
+                    <div>▪ 2,000 ➜ Legendary artwork evolution</div>
+                    <div>▪ 5,000 ➜ Final masterpiece version</div>
+                </div>
+            </div>
+            <div class="tagline-list">
+                <span class="tag">#OneHolderOnePixel</span>
+                <span class="tag">Build The Meme</span>
+                <span class="tag">Every Wallet Matters</span>
+                <span class="tag">$PIXL</span>
+            </div>
+        </div>
+    </div>
+    <footer>
+        ⚡ $PIXL • CA: 4TLVqvP3ZeAFCNKkitdAXnf6LpB4CaM1azX11M5Upump<br>
+        ✦ Every holder writes the story ✦ Data via Helius RPC ✦ Community-built masterpiece
+    </footer>
+</div>
+
+<script>
+    // -------------------------------
+    // 1. CONFIGURATION (Helius key fetched from JSONbin safely)
+    // 2. Token mint address (PIXL)
+    // 3. Pixel art drawing engine based on holder milestones
+    // -------------------------------
+    const MINT_ADDRESS = "4TLVqvP3ZeAFCNKkitdAXnf6LpB4CaM1azX11M5Upump";
+    let HELIUS_API_KEY = null;   // fetched dynamically
+
+    // State
+    let currentHolders = 0;
+    let currentMilestoneKey = 0;  // 0..9
+    let animationFrame = null;
+    let canvas = document.getElementById('pixelCanvas');
+    let ctx = canvas.getContext('2d');
+
+    // milestone thresholds & naming (must be sorted)
+    const MILESTONES = [
+        { threshold: 0, name: "Genesis Pixel" },          // 0
+        { threshold: 10, name: "First Pixel" },           // 1
+        { threshold: 50, name: "Basic Outline" },         // 2
+        { threshold: 100, name: "Colors Unlock" },        // 3
+        { threshold: 250, name: "Character Revealed" },   // 4
+        { threshold: 500, name: "Detailed Pixel Art" },   // 5
+        { threshold: 1000, name: "Animated Elements" },   // 6
+        { threshold: 1500, name: "Hidden Easter Eggs" },  // 7
+        { threshold: 2000, name: "Legendary Artwork" },   // 8
+        { threshold: 5000, name: "✨ FINAL MASTERPIECE ✨" } // 9
+    ];
+
+    // Given holder count, return milestone index (0..9)
+    function getMilestoneIndex(holders) {
+        let idx = 0;
+        for (let i = MILESTONES.length-1; i >=0; i--) {
+            if (holders >= MILESTONES[i].threshold) {
+                idx = i;
+                break;
+            }
+        }
+        return idx;
+    }
+
+    // ============================================================
+    // PIXEL ART GENERATOR - progressive building of "Pixl the Builder"
+    // each milestone adds complexity. We'll draw inside 512x512 canvas
+    // using pixel-art style (pixelated blocks). The art evolves from a
+    // single pixel to full builder character with hard hat, tools, animated sparks.
+    // ============================================================
+    function drawPixelArt(milestoneIdx, timeOffset = 0) {
+        if (!ctx) return;
+        const size = 512;
+        ctx.clearRect(0, 0, size, size);
+        ctx.imageSmoothingEnabled = false;
+        
+        // helper: draw filled pixel block region
+        function fillRectPx(x, y, w, h, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, w, h);
+        }
+        
+        // helper for pixel perfect details
+        function setPixel(x,y,color) { fillRectPx(x,y,1,1,color); }
+        
+        // background always dark construction site vibe
+        ctx.fillStyle = "#070b12";
+        ctx.fillRect(0, 0, size, size);
+        
+        // Stage 0: single pixel (center)
+        if (milestoneIdx >= 0) {
+            if (milestoneIdx === 0) {
+                fillRectPx(size/2-2, size/2-2, 4, 4, "#c0ffd0");
+                ctx.fillStyle = "#90f0b0";
+                ctx.font = "bold 16px monospace";
+                ctx.shadowBlur = 0;
+                ctx.fillText("⚡", size/2+8, size/2-4);
+                return;
+            }
+            
+            // COMMON FOUNDATION: evolve layer by layer
+            // Stage 1 (10 holders): basic outline shape (a small builder silhouette)
+            if (milestoneIdx >= 1) {
+                // head outline rectangle
+                ctx.fillStyle = "#9bc4b0";
+                fillRectPx(220, 200, 72, 82, "#282e3c");
+                fillRectPx(230, 190, 52, 60, "#5d7665");
+                // eyes placeholder
+                fillRectPx(246, 220, 8, 8, "#1e1e2a");
+                fillRectPx(258, 220, 8, 8, "#1e1e2a");
+            }
+            // Stage 2 (50) : basic outline refined + hard hat
+            if (milestoneIdx >= 2) {
+                fillRectPx(224, 176, 64, 20, "#e5b83c"); // yellow hard hat
+                fillRectPx(236, 170, 40, 12, "#d49a2e");
+                // shoulders
+                fillRectPx(206, 270, 100, 18, "#3e5a4b");
+            }
+            // Stage 3 (100) : colors unlock -> vibrant clothes & details
+            if (milestoneIdx >= 3) {
+                fillRectPx(244, 240, 24, 32, "#2f88ff"); // work vest
+                fillRectPx(230, 260, 52, 28, "#704c2e"); // belt
+                // toolbelt
+                fillRectPx(216, 278, 12, 18, "#b97f44");
+                fillRectPx(284, 278, 12, 18, "#b97f44");
+            }
+            // Stage 4 (250) : character fully revealed - face details, smile, ears
+            if (milestoneIdx >= 4) {
+                fillRectPx(250, 236, 12, 6, "#ffccaa"); // mouth/smile
+                fillRectPx(238, 212, 6, 12, "#f2c68b");
+                fillRectPx(268, 212, 6, 12, "#f2c68b");
+                // hard hat strap
+                fillRectPx(226, 196, 60, 4, "#a57c2c");
+            }
+            // Stage 5 (500) : detailed pixel art appears - bricks, tools, pixel shading
+            if (milestoneIdx >= 5) {
+                // add hammer & wrench
+                fillRectPx(202, 272, 20, 6, "#aaaaaa");
+                fillRectPx(202, 266, 8, 8, "#c08444");
+                fillRectPx(280, 272, 20, 6, "#aaaaaa");
+                fillRectPx(288, 264, 8, 12, "#b0b0b0");
+                // boots
+                fillRectPx(228, 296, 24, 12, "#4f2d1a");
+                fillRectPx(260, 296, 24, 12, "#4f2d1a");
+            }
+            // Stage 6 (1000) : animated elements unlock (dynamic sparks / blinking lights)
+            if (milestoneIdx >= 6) {
+                let blink = Math.sin(timeOffset * 0.008) > 0 ? "#ffcc44" : "#ff8844";
+                fillRectPx(234, 206, 4, 4, blink); // animated glowing eye
+                fillRectPx(274, 206, 4, 4, blink);
+                // floating particles
+                for (let i=0;i<6;i++) {
+                    let phase = (timeOffset * 0.01 + i) % (Math.PI*2);
+                    let xx = 170 + Math.sin(phase)*8 + i*12;
+                    let yy = 150 + Math.cos(phase*1.3)*6;
+                    ctx.fillStyle = `rgba(255, 200, 100, ${0.4+Math.sin(timeOffset*0.02+i)*0.2})`;
+                    ctx.fillRect(xx, yy, 4, 4);
+                }
+            }
+            // Stage 7 (1500) : hidden easter eggs (tiny pixel PIXL logo & ???)
+            if (milestoneIdx >= 7) {
+                // secret builder’s mark
+                ctx.fillStyle = "#ffe5a3";
+                fillRectPx(72, 64, 6, 6, "#fbcb7b");
+                fillRectPx(78, 70, 6, 6, "#f0a35e");
+                fillRectPx(66, 70, 6, 6, "#f0a35e");
+                ctx.fillStyle = "#b3ffcf";
+                ctx.font = "bold 14px monospace";
+                ctx.fillText("$PIXL", 60, 92);
+                // little rocket?
+                fillRectPx(400, 420, 12, 20, "#ae5e9e");
+                fillRectPx(404, 414, 4, 8, "#f2b5d4");
+            }
+            // Stage 8 (2000) : Legendary artwork evolution (full golden armor & background aura)
+            if (milestoneIdx >= 8) {
+                // legendary aura
+                ctx.globalAlpha = 0.4;
+                for (let r=0; r<3; r++) {
+                    ctx.beginPath();
+                    ctx.arc(256, 260, 90 + r*12, 0, Math.PI*2);
+                    ctx.fillStyle = `rgba(255, 215, 0, ${0.1-r*0.02})`;
+                    ctx.fill();
+                }
+                ctx.globalAlpha = 1.0;
+                // golden hard hat & wings effect
+                fillRectPx(204, 168, 104, 12, "#e8bf4c");
+                fillRectPx(188, 178, 36, 36, "#dbb42c");
+                fillRectPx(288, 178, 36, 36, "#dbb42c");
+                // legendary tool: pixel hammer of glory
+                fillRectPx(160, 260, 32, 14, "#bb9922");
+                fillRectPx(164, 250, 16, 12, "#f5d742");
+            }
+            // Stage 9 (5000) : FINAL MASTERPIECE - full cinematic pixl with construction background
+            if (milestoneIdx >= 9) {
+                // full masterpiece background: city silhouette
+                ctx.fillStyle = "#1f2c3a";
+                for (let i=0;i<12;i++) { fillRectPx(40+i*40, 380, 18, 70, "#2e4057"); }
+                // rainbow effects + detailed animation
+                let rainbow = `hsl(${(Date.now()*0.02)%360}, 70%, 60%)`;
+                ctx.fillStyle = rainbow;
+                fillRectPx(210, 154, 92, 16, rainbow);
+                // animated gear in background
+                for (let g=0;g<3;g++) {
+                    let angle = (timeOffset * 0.01 + g) % (Math.PI*2);
+                    let gearX = 420 + Math.sin(angle)*8;
+                    let gearY = 100 + Math.cos(angle*1.4)*8;
+                    fillRectPx(gearX, gearY, 8, 8, "#ffa055");
+                }
+                // masterpiece glow eyes
+                ctx.fillStyle = "#fffad0";
+                fillRectPx(230, 206, 8, 8, "#f0ff80");
+                fillRectPx(274, 206, 8, 8, "#f0ff80");
+                // final legendary hammer and blueprint
+                ctx.fillStyle = "#c2b280";
+                fillRectPx(180, 286, 40, 12, "#ebc06f");
+                ctx.fillStyle = "#aadeff";
+                fillRectPx(324, 292, 36, 24, "#9cddff");
+                ctx.fillStyle = "#3a2c1f";
+                ctx.font = "bold 12px monospace";
+                ctx.fillText("BUILT", 330, 308);
+            }
+        }
+        
+        // Additional pixelated border for context: draws small holder count effect
+        ctx.font = "bold 20px monospace";
+        ctx.fillStyle = "#99ffe0";
+        ctx.shadowBlur = 0;
+        ctx.fillText("🧱", 24, 48);
+    }
+    
+    // Animation loop (for stages that have animated elements)
+    let animationActive = false;
+    let time = 0;
+    function animateCanvas() {
+        if (!canvas) return;
+        const milestone = getMilestoneIndex(currentHolders);
+        drawPixelArt(milestone, time);
+        time += 80;  // smooth updates for animated parts
+        requestAnimationFrame(() => {
+            setTimeout(() => { if (animationActive) animateCanvas(); }, 80);
+        });
+    }
+    
+    function startAnimation() {
+        if (animationActive) return;
+        animationActive = true;
+        animateCanvas();
+    }
+    
+    // update UI for holders and progress
+    function updateUI(holders) {
+        currentHolders = holders;
+        document.getElementById('holderCountDisplay').innerText = holders.toLocaleString();
+        const milestoneIdx = getMilestoneIndex(holders);
+        currentMilestoneKey = milestoneIdx;
+        const milestoneName = MILESTONES[milestoneIdx].name;
+        document.getElementById('evolutionStage').innerText = milestoneName;
+        
+        // Next milestone calculation
+        let nextThreshold = 0;
+        let nextName = "";
+        for (let i = 0; i < MILESTONES.length; i++) {
+            if (holders < MILESTONES[i].threshold) {
+                nextThreshold = MILESTONES[i].threshold;
+                nextName = MILESTONES[i].name;
+                break;
+            }
+        }
+        if (nextThreshold === 0) {
+            document.getElementById('nextMilestoneInfo').innerHTML = "🎉 MAX EVOLUTION: Masterpiece unlocked! 🎉";
+            document.getElementById('progressFill').style.width = "100%";
+        } else {
+            let prevThreshold = MILESTONES[milestoneIdx].threshold;
+            let range = nextThreshold - prevThreshold;
+            let progress = Math.min(100, ((holders - prevThreshold) / range) * 100);
+            document.getElementById('progressFill').style.width = `${Math.max(0, progress)}%`;
+            document.getElementById('nextMilestoneInfo').innerHTML = `🔨 Next: ${nextName} at ${nextThreshold.toLocaleString()} holders  •  +${(nextThreshold - holders).toLocaleString()} to go`;
+        }
+        // force redraw
+        const liveIdx = getMilestoneIndex(holders);
+        drawPixelArt(liveIdx, time);
+    }
+    
+    // ---- HELIUS INTEGRATION: fetch token holder count using getTokenAccounts (DAS or getProgramAccounts)
+    // We'll use the enhanced RPC method: getTokenSupply + getTokenAccounts by mint. But simplest: call getTokenHolders via Helius webhook? no, we use RPC "getTokenAccounts" with json rpc.
+    async function fetchHoldersFromHelius() {
+        if (!HELIUS_API_KEY) {
+            console.warn("Helius key not yet loaded");
+            return null;
+        }
+        const RPC_URL = `https://mainnet.helius-rpc.com/?api-key=${HELIUS_API_KEY}`;
+        // use getProgramAccounts for token accounts of mint address (faster via filter)
+        const payload = {
+            jsonrpc: "2.0",
+            id: 1,
+            method: "getProgramAccounts",
+            params: [
+                "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+                {
+                    encoding: "jsonParsed",
+                    filters: [
+                        { dataSize: 165 }, // token account size
+                        { memcmp: { offset: 0, bytes: MINT_ADDRESS } }
+                    ]
+                }
+            ]
+        };
+        try {
+            const resp = await fetch(RPC_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            const data = await resp.json();
+            if (data && data.result) {
+                // filter accounts with nonzero amount
+                let holderCount = 0;
+                for (const account of data.result) {
+                    const parsed = account.account?.data?.parsed?.info;
+                    if (parsed && parsed.tokenAmount && parsed.tokenAmount.uiAmount > 0) {
+                        holderCount++;
+                    }
+                }
+                return holderCount;
+            } else {
+                console.warn("No result or error", data);
+                return null;
+            }
+        } catch (err) {
+            console.error("Helius fetch error:", err);
+            return null;
+        }
+    }
+    
+    async function refreshHolders() {
+        if (!HELIUS_API_KEY) return;
+        const count = await fetchHoldersFromHelius();
+        if (count !== null && count !== undefined) {
+            currentHolders = count;
+            updateUI(currentHolders);
+            document.getElementById('liveStatus').innerHTML = `<span class="pulse"></span> live: ${new Date().toLocaleTimeString()}`;
+        } else {
+            document.getElementById('liveStatus').innerHTML = `<span style="background:#ff8866;"></span> retrying...`;
+        }
+    }
+    
+    // fetch Helius key from jsonbin securely
+    async function fetchHeliusKey() {
+        try {
+            const response = await fetch("https://api.jsonbin.io/v3/b/6a1c618eddf5aa59f77c451e");
+            const jsonData = await response.json();
+            if (jsonData && jsonData.record && jsonData.record.helius_key) {
+                HELIUS_API_KEY = jsonData.record.helius_key;
+                document.getElementById('liveStatus').innerHTML = `<span class="pulse"></span> Helius connected`;
+                // initial fetch
+                await refreshHolders();
+                // start polling every 30 seconds
+                setInterval(refreshHolders, 30000);
+                startAnimation();
+            } else {
+                throw new Error("Invalid key format");
+            }
+        } catch(e) {
+            console.error("failed to load helius key", e);
+            document.getElementById('liveStatus').innerHTML = "⚠️ key fetch error";
+            document.getElementById('holderCountDisplay').innerText = "?";
+        }
+    }
+    
+    // bootstrap
+    fetchHeliusKey();
+    // fallback draw
+    drawPixelArt(0,0);
+</script>
+</body>
+</html>
+```
